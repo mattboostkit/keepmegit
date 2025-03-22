@@ -6,21 +6,28 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "import-blog-posts": "node ./src/scripts/import-blog-posts.js"
   },
   "dependencies": {
+    "@sanity/client": "^6.10.0",
+    "@sanity/code-input": "^5.1.2",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^3.80.1",
+    "date-fns": "^4.1.0",
     "next": "14.1.0",
+    "next-sanity": "^7.0.5",
     "react": "^18",
     "react-dom": "^18",
-    "next-sanity": "^7.0.5",
-    "@sanity/client": "^6.10.0",
-    "@sanity/image-url": "^1.0.2"
+    "sanity": "^3.80.1",
+    "styled-components": "^6.1.16"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
-    "postcss": "^8",
-    "tailwindcss": "^3.3.0",
     "eslint": "^8",
-    "eslint-config-next": "14.1.0"
+    "eslint-config-next": "14.1.0",
+    "esm": "^3.2.25",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0"
   }
 }

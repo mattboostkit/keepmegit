@@ -2,9 +2,18 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { format } from 'date-fns';
 
-export default function BlogPostCard({ title, excerpt, imageUrl, category, date, slug }) {
+export default function BlogPostCard({ post }) {
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Extract data from post object
+  const { title, excerpt, featuredImage, categories = [], publishedAt, slug } = post || {};
+  const category = categories && categories.length > 0 ? categories[0] : null;
+  
+  // Format date if available
+  const formattedDate = publishedAt ? format(new Date(publishedAt), 'd MMMM yyyy') : '';
   
   return (
     <div 
@@ -13,9 +22,9 @@ export default function BlogPostCard({ title, excerpt, imageUrl, category, date,
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="relative h-48 overflow-hidden">
-        {imageUrl ? (
+        {featuredImage ? (
           <Image
-            src={imageUrl}
+            src={featuredImage}
             alt={title}
             fill
             className={`object-cover transition-transform duration-500 ${isHovered ? 'scale-110' : 'scale-100'}`}
@@ -32,15 +41,15 @@ export default function BlogPostCard({ title, excerpt, imageUrl, category, date,
         )}
       </div>
       <div className="p-6">
-        <div className="text-gray-500 text-sm mb-2">{date}</div>
+        {formattedDate && <div className="text-gray-500 text-sm mb-2">{formattedDate}</div>}
         <h3 className="text-xl font-semibold mb-3">{title}</h3>
         <p className="text-gray-600 mb-4 line-clamp-3">{excerpt}</p>
-        <a 
-          href={`/blog/${slug}`} 
+        <Link 
+          href={`/blog/${slug?.current || '#'}`} 
           className="inline-block text-teal-700 font-medium hover:text-teal-900 transition-colors"
         >
           Read More →
-        </a>
+        </Link>
       </div>
     </div>
   );

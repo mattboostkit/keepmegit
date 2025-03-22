@@ -1,7 +1,7 @@
 import { createClient } from 'next-sanity';
 
 export const client = createClient({
-  projectId: 'your-project-id', // Will be replaced with actual Sanity project ID
+  projectId: '2yws8jj2', // Sanity project ID for KeepMe
   dataset: 'production',
   apiVersion: '2023-05-03',
   useCdn: false, // Set to true for production
@@ -33,7 +33,22 @@ export async function getBlogPosts({ limit = 10, skip = 0, category = null }) {
     "author": author->{name, "image": image.asset->url}
   }`;
   
-  return client.fetch(query);
+  console.log('Executing Sanity query:', query);
+  console.log('With client config:', {
+    projectId: client.config().projectId,
+    dataset: client.config().dataset,
+    apiVersion: client.config().apiVersion,
+    useCdn: client.config().useCdn
+  });
+  
+  try {
+    const result = await client.fetch(query);
+    console.log('Sanity query result:', result);
+    return result;
+  } catch (error) {
+    console.error('Error fetching blog posts from Sanity:', error);
+    return [];
+  }
 }
 
 export async function getBlogPost(slug) {

@@ -1,4 +1,6 @@
 import '../styles/globals.css';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export const metadata = {
   title: 'KeepMe - Expert Fragrance Manufacturers & Premium Glass Packaging',
@@ -8,14 +10,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
-        <header>
-          {/* Header will be implemented as a component */}
-        </header>
-        <main>{children}</main>
-        <footer>
-          {/* Footer will be implemented as a component */}
-        </footer>
+      <body className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow">{children}</main>
+        <Footer />
       </body>
     </html>
   )
