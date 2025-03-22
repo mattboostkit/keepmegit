@@ -3,8 +3,9 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { createClient } from 'next-sanity';
 import BlogPostCard from '../../components/BlogPostCard';
-import { getBlogPosts, getCategories } from '../../lib/sanity';
+import { clientConfig } from '../../lib/sanity';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState([]);
@@ -20,11 +21,30 @@ export default function BlogPage() {
   
   // Fetch data from Sanity
   useEffect(() => {
+    const client = createClient(clientConfig);
+    
     const fetchData = async () => {
       try {
         // Fetch data from Sanity
-        const fetchedPosts = await getBlogPosts({ limit: 100 });
-        const fetchedCategories = await getCategories();
+        let postsQuery = `*[_type == "post"] | order(publishedAt desc)[0...100]{
+          _id,
+          title,
+          slug,
+          excerpt,
+          "featuredImage": featuredImage.asset->url,
+          "categories": categories[]->title,
+          publishedAt,
+          "author": author->{name, "image": image.asset->url}
+        }`;
+        
+        let categoriesQuery = `*[_type == "category"]{
+          _id,
+          title,
+          slug
+        }`;
+        
+        const fetchedPosts = await client.fetch(postsQuery);
+        const fetchedCategories = await client.fetch(categoriesQuery);
         
         if (fetchedCategories && fetchedCategories.length > 0) {
           setCategories(fetchedCategories.map(cat => cat.title));

@@ -1,50 +1,103 @@
 import { createClient } from 'next-sanity';
 
-export const client = createClient({
-  projectId: '2yws8jj2', // Sanity project ID for KeepMe
-  dataset: 'production',
-  apiVersion: '2023-05-03',
-  useCdn: false, // Set to true for production
-});
+// Your Sanity project configuration
+const projectId = '2yws8jj2';
+const dataset = 'production';
+const apiVersion = '2023-05-03';
+
+// Configuration for server-side usage
+export const serverConfig = {
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: process.env.SANITY_API_TOKEN,
+};
+
+// Configuration for client-side usage
+export const clientConfig = {
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: true,
+  // Add CORS configuration for Vercel deployment
+  cors: {
+    allowOrigins: [
+      'http://localhost:3000',
+      'https://keepme-git.vercel.app',
+      'https://*.vercel.app',
+      process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : '',
+    ].filter(Boolean),
+  },
+};
+
+// Create a server-side client
+export const serverClient = createClient(serverConfig);
+
+// Create a client-side client
+export const client = createClient(clientConfig);
+
+// Server-side Sanity client (for use in server components)
+// export const serverClient = createClient({
+//   projectId: '2yws8jj2', // Sanity project ID for KeepMe
+//   dataset: 'production',
+//   apiVersion: '2023-05-03',
+//   useCdn: false, // Set to true for production
+// });
+
+// CORS allowed origins
+// const allowedOrigins = [
+//   'http://localhost:3000',
+//   'https://keepmegit-git-main-matt-boostkit-projects.vercel.app',
+//   'https://keepmegit.vercel.app'
+// ];
+
+// Client-side Sanity client (for use in client components)
+// export const clientConfig = {
+//   projectId: '2yws8jj2',
+//   dataset: 'production',
+//   apiVersion: '2023-05-03',
+//   useCdn: true,
+// };
+
+// export const client = createClient(clientConfig);
 
 export async function getHomePage() {
-  return client.fetch(`*[_type == "homePage"][0]`);
+  return serverClient.fetch(`*[_type == "homePage"][0]`);
 }
 
 export async function getGlassPage() {
-  return client.fetch(`*[_type == "glassPage"][0]`);
+  return serverClient.fetch(`*[_type == "glassPage"][0]`);
 }
 
 export async function getBlogPosts({ limit = 10, skip = 0, category = null }) {
-  let query = `*[_type == "post"]`;
-  
-  if (category) {
-    query += ` && categories[]->slug.current == "${category}"`;
-  }
-  
-  query += ` | order(publishedAt desc)[${skip}...${skip + limit}]{
-    _id,
-    title,
-    slug,
-    excerpt,
-    "featuredImage": featuredImage.asset->url,
-    "categories": categories[]->title,
-    publishedAt,
-    "author": author->{name, "image": image.asset->url}
-  }`;
-  
-  console.log('Executing Sanity query:', query);
-  console.log('With client config:', {
-    projectId: client.config().projectId,
-    dataset: client.config().dataset,
-    apiVersion: client.config().apiVersion,
-    useCdn: client.config().useCdn
-  });
-  
   try {
-    const result = await client.fetch(query);
-    console.log('Sanity query result:', result);
-    return result;
+    let query = `*[_type == "post"]`;
+    if (category) {
+      query += ` && categories[]->slug.current == "${category}"`;
+    }
+    query += ` | order(publishedAt desc)[${skip}...${skip + limit}]{
+      _id,
+      title,
+      slug,
+      excerpt,
+      "featuredImage": featuredImage.asset->url,
+      "categories": categories[]->title,
+      publishedAt,
+      "author": author->{name, "image": image.asset->url}
+    }`;
+    
+    console.log('Executing Sanity query:', query);
+    console.log('With client config:', {
+      projectId: serverClient.config().projectId,
+      dataset: serverClient.config().dataset,
+      apiVersion: serverClient.config().apiVersion,
+      useCdn: serverClient.config().useCdn
+    });
+    
+    const posts = await serverClient.fetch(query);
+    console.log(`Fetched ${posts.length} posts from Sanity`);
+    return posts;
   } catch (error) {
     console.error('Error fetching blog posts from Sanity:', error);
     return [];
@@ -52,8 +105,9 @@ export async function getBlogPosts({ limit = 10, skip = 0, category = null }) {
 }
 
 export async function getBlogPost(slug) {
-  return client.fetch(
-    `*[_type == "post" && slug.current == $slug][0]{
+  try {
+    console.log('Fetching blog post with slug:', slug);
+    const post = await serverClient.fetch(`*[_type == "post" && slug.current == $slug][0]{
       _id,
       title,
       slug,
@@ -69,21 +123,32 @@ export async function getBlogPost(slug) {
         "featuredImage": featuredImage.asset->url,
         publishedAt
       }
-    }`,
-    { slug }
-  );
+    }`, { slug });
+    console.log('Fetched blog post from Sanity:', post);
+    return post;
+  } catch (error) {
+    console.error('Error fetching blog post from Sanity:', error);
+    return null;
+  }
 }
 
 export async function getCategories() {
-  return client.fetch(`*[_type == "category"]{
-    _id,
-    title,
-    slug
-  }`);
+  try {
+    const categories = await serverClient.fetch(`*[_type == "category"]{
+      _id,
+      title,
+      slug
+    } | order(title asc)`);
+    console.log(`Fetched ${categories.length} categories from Sanity`);
+    return categories;
+  } catch (error) {
+    console.error('Error fetching categories from Sanity:', error);
+    return [];
+  }
 }
 
 export async function getServices() {
-  return client.fetch(`*[_type == "service"]{
+  return serverClient.fetch(`*[_type == "service"]{
     _id,
     title,
     description,
@@ -93,7 +158,7 @@ export async function getServices() {
 }
 
 export async function getProducts() {
-  return client.fetch(`*[_type == "product"]{
+  return serverClient.fetch(`*[_type == "product"]{
     _id,
     title,
     description,
@@ -104,10 +169,22 @@ export async function getProducts() {
 }
 
 export async function getTestimonials() {
-  return client.fetch(`*[_type == "testimonial"]{
+  return serverClient.fetch(`*[_type == "testimonial"]{
     _id,
     quote,
     author,
     company
   }`);
+}
+
+// Helper function to log Sanity client errors
+export function logSanityError(error, operation) {
+  console.error(`Sanity ${operation} error:`, error);
+  if (error.response) {
+    console.error('Response status:', error.response.status);
+    console.error('Response data:', error.response.data);
+  }
+  if (error.request) {
+    console.error('Request details:', error.request);
+  }
 }
