@@ -1,11 +1,9 @@
-'use client';
-
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
 import { getBlogPost } from '../../../../lib/sanity';
+import CommentForm from '../../../../components/CommentForm';
+import NewsletterForm from '../../../../components/NewsletterForm';
 
 export async function generateMetadata({ params }) {
   try {
@@ -51,48 +49,6 @@ export default async function BlogPostPage({ params }) {
       );
     }
 
-    const [loading, setLoading] = useState(false);
-    const [commentName, setCommentName] = useState('');
-    const [commentEmail, setCommentEmail] = useState('');
-    const [commentText, setCommentText] = useState('');
-    const [commentSubmitted, setCommentSubmitted] = useState(false);
-    const [newsletterEmail, setNewsletterEmail] = useState('');
-    const [subscriptionStatus, setSubscriptionStatus] = useState(null);
-
-    useEffect(() => {
-      const fetchPost = async () => {
-        try {
-          // Fetch data from Sanity
-          const fetchedPost = await getBlogPost(params.slug);
-          
-          if (fetchedPost) {
-            console.log('Fetched blog post from Sanity:', fetchedPost);
-          } else {
-            console.log('Post not found in Sanity');
-          }
-          
-          setLoading(false);
-        } catch (error) {
-          console.error('Error fetching blog post:', error);
-          setLoading(false);
-        }
-      };
-
-      if (params.slug) {
-        fetchPost();
-      }
-    }, [params.slug]);
-
-    // Render loading state
-    if (loading) {
-      return (
-        <div className="flex justify-center items-center min-h-screen">
-          <div className="w-16 h-16 border-t-4 border-teal-700 border-solid rounded-full animate-spin"></div>
-          <p className="ml-4 text-gray-600">Loading post...</p>
-        </div>
-      );
-    }
-    
     return (
       <div className="blog-post-page">
         {/* Breadcrumbs */}
@@ -328,71 +284,7 @@ export default async function BlogPostPage({ params }) {
             
             <div className="bg-gray-50 rounded-lg p-6">
               <h3 className="text-xl font-bold mb-6">Leave a Comment</h3>
-              
-              {commentSubmitted && (
-                <div className="mb-6 p-4 rounded-md bg-green-50 text-green-700">
-                  Thank you for your comment. It will be reviewed and published shortly.
-                </div>
-              )}
-              
-              <form onSubmit={(e) => {
-                e.preventDefault();
-                setCommentSubmitted(true);
-              }}>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-                      Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={commentName}
-                      onChange={(e) => setCommentName(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-gray-700 font-medium mb-2">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={commentEmail}
-                      onChange={(e) => setCommentEmail(e.target.value)}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                      required
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Your email will not be published.</p>
-                  </div>
-                </div>
-                
-                <div className="mb-4">
-                  <label htmlFor="comment" className="block text-gray-700 font-medium mb-2">
-                    Comment <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="comment"
-                    name="comment"
-                    value={commentText}
-                    onChange={(e) => setCommentText(e.target.value)}
-                    rows="5"
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                    required
-                  ></textarea>
-                </div>
-                
-                <button
-                  type="submit"
-                  className="btn btn-primary py-2 px-6"
-                >
-                  Post Comment
-                </button>
-              </form>
+              <CommentForm />
             </div>
           </div>
         </section>
@@ -427,37 +319,7 @@ export default async function BlogPostPage({ params }) {
               <p className="text-gray-600 mb-6">
                 Subscribe to our newsletter for the latest industry insights and company news
               </p>
-              
-              {subscriptionStatus === 'success' ? (
-                <div className="bg-green-50 text-green-700 p-4 rounded-md mb-4">
-                  Thank you for subscribing! You'll receive our next newsletter.
-                </div>
-              ) : (
-                <form onSubmit={(e) => {
-                  e.preventDefault();
-                  setSubscriptionStatus('success');
-                }} className="max-w-md mx-auto">
-                  <div className="flex flex-col sm:flex-row gap-3">
-                    <input
-                      type="email"
-                      value={newsletterEmail}
-                      onChange={(e) => setNewsletterEmail(e.target.value)}
-                      placeholder="Your email address"
-                      className="flex-grow px-4 py-2 border border-gray-300 rounded-md focus:ring-teal-500 focus:border-teal-500"
-                      required
-                    />
-                    <button
-                      type="submit"
-                      className="btn btn-primary whitespace-nowrap px-6 py-2"
-                    >
-                      Subscribe
-                    </button>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    We respect your privacy. Unsubscribe at any time.
-                  </p>
-                </form>
-              )}
+              <NewsletterForm />
             </div>
           </div>
         </section>
