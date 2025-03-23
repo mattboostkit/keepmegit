@@ -1,5 +1,11 @@
 # KeepMe Website Changelog
 
+## 23 March 2025
+
+### Fixed
+- Resolved dependency conflict between Next.js v15.2.3 and next-sanity by using `--legacy-peer-deps` flag
+- Successfully installed next-sanity v8.0.0 alongside Next.js v15.2.3 despite peer dependency requirements
+
 ## 22 March 2025
 
 ### Added
