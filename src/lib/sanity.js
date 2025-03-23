@@ -70,6 +70,32 @@ export async function getGlassPage() {
   return serverClient.fetch(`*[_type == "glassPage"][0]`);
 }
 
+export async function getAboutPage() {
+  try {
+    const aboutPage = await serverClient.fetch(`*[_type == "aboutPage"][0]{
+      ...,
+      "heroImage": heroImage.asset->url,
+      "teamMembers": teamMembers[]{
+        ...,
+        "image": image.asset->url
+      },
+      "milestones": milestones[]{
+        ...,
+        "image": image.asset->url
+      },
+      "facilities": facilities[]{
+        ...,
+        "image": image.asset->url
+      }
+    }`);
+    
+    return aboutPage;
+  } catch (error) {
+    console.error('Error fetching About page from Sanity:', error);
+    return null;
+  }
+}
+
 export async function getBlogPosts({ limit = 10, skip = 0, category = null }) {
   try {
     let query = `*[_type == "post"]`;
@@ -163,18 +189,60 @@ export async function getProducts() {
     title,
     description,
     "image": image.asset->url,
+    "gallery": gallery[]{
+      "url": asset->url,
+      alt,
+      caption
+    },
     category,
-    slug
+    subcategory,
+    productCode,
+    featured,
+    slug,
+    specifications,
+    dimensions,
+    materials,
+    finishOptions,
+    decorationOptions,
+    minimumOrderQuantity,
+    leadTime
   }`);
 }
 
 export async function getTestimonials() {
   return serverClient.fetch(`*[_type == "testimonial"]{
     _id,
+    name,
+    company,
     quote,
-    author,
-    company
+    rating
   }`);
+}
+
+export async function getGlassProducts() {
+  return serverClient.fetch(`*[_type == "product" && category == "glass"]{
+    _id,
+    title,
+    description,
+    "image": image.asset->url,
+    "gallery": gallery[]{
+      "url": asset->url,
+      alt,
+      caption
+    },
+    category,
+    subcategory,
+    productCode,
+    featured,
+    slug,
+    specifications,
+    dimensions,
+    materials,
+    finishOptions,
+    decorationOptions,
+    minimumOrderQuantity,
+    leadTime
+  } | order(subcategory asc, title asc)`);
 }
 
 // Helper function to log Sanity client errors

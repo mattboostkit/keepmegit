@@ -69,8 +69,29 @@ export default {
           {title: 'Cosmetic Containers', value: 'cosmetic'},
           {title: 'Food & Beverage', value: 'food'},
           {title: 'Specialty Glass', value: 'specialty'},
+          {title: 'Glass Products', value: 'glass'},
         ],
       },
+      validation: Rule => Rule.required()
+    },
+    {
+      name: 'subcategory',
+      title: 'Subcategory',
+      type: 'string',
+      description: 'For glass products, this could be a series number or collection name',
+    },
+    {
+      name: 'productCode',
+      title: 'Product Code',
+      type: 'string',
+      description: 'Unique identifier for the product (e.g., K163-VA1)',
+    },
+    {
+      name: 'featured',
+      title: 'Featured Product',
+      type: 'boolean',
+      description: 'Mark this product as featured to highlight it on the website',
+      initialValue: false,
     },
     {
       name: 'content',
@@ -100,6 +121,88 @@ export default {
           ]
         }
       ]
+    },
+    {
+      name: 'dimensions',
+      title: 'Dimensions',
+      type: 'object',
+      fields: [
+        {
+          name: 'height',
+          title: 'Height (mm)',
+          type: 'number',
+        },
+        {
+          name: 'width',
+          title: 'Width/Diameter (mm)',
+          type: 'number',
+        },
+        {
+          name: 'depth',
+          title: 'Depth (mm)',
+          type: 'number',
+        },
+        {
+          name: 'capacity',
+          title: 'Capacity (ml)',
+          type: 'number',
+        },
+        {
+          name: 'weight',
+          title: 'Weight (g)',
+          type: 'number',
+        }
+      ]
+    },
+    {
+      name: 'materials',
+      title: 'Materials',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Clear Glass', value: 'clear-glass'},
+          {title: 'Frosted Glass', value: 'frosted-glass'},
+          {title: 'Coloured Glass', value: 'coloured-glass'},
+          {title: 'Crystal Glass', value: 'crystal-glass'},
+          {title: 'Recycled Glass', value: 'recycled-glass'},
+        ]
+      }
+    },
+    {
+      name: 'finishOptions',
+      title: 'Finish Options',
+      type: 'array',
+      of: [{type: 'string'}],
+      description: 'Available finish options for this product',
+    },
+    {
+      name: 'decorationOptions',
+      title: 'Decoration Options',
+      type: 'array',
+      of: [{type: 'string'}],
+      options: {
+        list: [
+          {title: 'Screen Printing', value: 'screen-printing'},
+          {title: 'Hot Stamping', value: 'hot-stamping'},
+          {title: 'Embossing', value: 'embossing'},
+          {title: 'Debossing', value: 'debossing'},
+          {title: 'Etching', value: 'etching'},
+          {title: 'Metallisation', value: 'metallisation'},
+        ]
+      }
+    },
+    {
+      name: 'minimumOrderQuantity',
+      title: 'Minimum Order Quantity',
+      type: 'number',
+      description: 'The minimum quantity that can be ordered',
+    },
+    {
+      name: 'leadTime',
+      title: 'Lead Time (weeks)',
+      type: 'number',
+      description: 'Estimated lead time for production in weeks',
     },
     {
       name: 'metaTitle',

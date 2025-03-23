@@ -1,18 +1,37 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
+  const dropdownRefs = useRef({});
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (activeDropdown && 
+          dropdownRefs.current[activeDropdown] && 
+          !dropdownRefs.current[activeDropdown].contains(event.target)) {
+        setActiveDropdown(null);
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [activeDropdown]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const toggleDropdown = (dropdown) => {
+  const toggleDropdown = (dropdown, event) => {
+    event.preventDefault();
+    event.stopPropagation();
     if (activeDropdown === dropdown) {
       setActiveDropdown(null);
     } else {
@@ -22,7 +41,7 @@ export default function Header() {
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div className="container mx-auto px-4 py-5 flex justify-between items-center">
         <div className="logo">
           <Link href="/">
             <div className="flex items-center cursor-pointer">
@@ -35,74 +54,84 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex space-x-6">
-          <Link href="/about" className="nav-link hover:text-teal-700 font-medium">
+        <nav className="hidden md:flex space-x-8">
+          <Link href="/about" className="nav-link hover:text-teal-700 font-medium text-lg">
             About Us
           </Link>
           
           {/* Services Dropdown */}
-          <div className="relative group">
+          <div 
+            className="relative" 
+            ref={el => dropdownRefs.current['services'] = el}
+          >
             <button 
-              className="nav-link hover:text-teal-700 font-medium flex items-center"
-              onClick={() => toggleDropdown('services')}
+              className="nav-link hover:text-teal-700 font-medium flex items-center text-lg"
+              onClick={(e) => toggleDropdown('services', e)}
             >
               Services
-              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
-            <div className={`absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 ${activeDropdown === 'services' ? 'block' : 'hidden'} group-hover:block`}>
-              <Link href="/services/fragrance-manufacturing" className="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700">
+            <div 
+              className={`absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-2 z-10 ${activeDropdown === 'services' ? 'block' : 'hidden'}`}
+            >
+              <Link href="/services/fragrance-manufacturing" className="block px-4 py-3 text-base text-gray-700 hover:bg-teal-50 hover:text-teal-700">
                 Fragrance Manufacturing
               </Link>
-              <Link href="/services/glass-packaging" className="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700">
+              <Link href="/services/glass-packaging" className="block px-4 py-3 text-base text-gray-700 hover:bg-teal-50 hover:text-teal-700">
                 Glass & Packaging
               </Link>
-              <Link href="/services/full-service-solutions" className="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700">
+              <Link href="/services/full-service-solutions" className="block px-4 py-3 text-base text-gray-700 hover:bg-teal-50 hover:text-teal-700">
                 Full-Service Solutions
               </Link>
             </div>
           </div>
           
-          <Link href="/products" className="nav-link hover:text-teal-700 font-medium">
+          <Link href="/products" className="nav-link hover:text-teal-700 font-medium text-lg">
             Products
           </Link>
-          <Link href="/glass" className="nav-link hover:text-teal-700 font-medium">
+          <Link href="/glass" className="nav-link hover:text-teal-700 font-medium text-lg">
             Glass
           </Link>
           
           {/* Tools Dropdown */}
-          <div className="relative group">
+          <div 
+            className="relative" 
+            ref={el => dropdownRefs.current['tools'] = el}
+          >
             <button 
-              className="nav-link hover:text-teal-700 font-medium flex items-center"
-              onClick={() => toggleDropdown('tools')}
+              className="nav-link hover:text-teal-700 font-medium flex items-center text-lg"
+              onClick={(e) => toggleDropdown('tools', e)}
             >
               Tools
-              <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
-            <div className={`absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 ${activeDropdown === 'tools' ? 'block' : 'hidden'} group-hover:block`}>
-              <Link href="/tools/quote-sheet" className="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700">
+            <div 
+              className={`absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-2 z-10 ${activeDropdown === 'tools' ? 'block' : 'hidden'}`}
+            >
+              <Link href="/tools/quote-sheet" className="block px-4 py-3 text-base text-gray-700 hover:bg-teal-50 hover:text-teal-700">
                 Quote Sheet
               </Link>
-              <Link href="/tools/fragrance-calculator" className="block px-4 py-2 text-sm text-gray-700 hover:bg-teal-50 hover:text-teal-700">
+              <Link href="/tools/fragrance-calculator" className="block px-4 py-3 text-base text-gray-700 hover:bg-teal-50 hover:text-teal-700">
                 Fragrance Calculator
               </Link>
             </div>
           </div>
           
-          <Link href="/blog" className="nav-link hover:text-teal-700 font-medium">
+          <Link href="/blog" className="nav-link hover:text-teal-700 font-medium text-lg">
             Blog
           </Link>
-          <Link href="/contact" className="nav-link hover:text-teal-700 font-medium">
+          <Link href="/contact" className="nav-link hover:text-teal-700 font-medium text-lg">
             Contact
           </Link>
         </nav>
 
         {/* CTA Button */}
         <div className="hidden md:block">
-          <Link href="/tools/quote-sheet" className="btn btn-primary">
+          <Link href="/tools/quote-sheet" className="btn btn-primary text-base px-5 py-3">
             Get a Quote
           </Link>
         </div>
@@ -141,73 +170,74 @@ export default function Header() {
       {isMenuOpen && (
         <div className="md:hidden bg-white shadow-lg">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <Link href="/about" className="nav-link block py-2" onClick={toggleMenu}>
+            <Link href="/about" className="nav-link block py-3 text-lg" onClick={toggleMenu}>
               About Us
             </Link>
             
             {/* Mobile Services Dropdown */}
             <div>
               <button 
-                className="flex items-center justify-between w-full py-2"
-                onClick={() => toggleDropdown('mobileServices')}
+                className="flex items-center justify-between w-full py-3 text-lg"
+                onClick={(e) => toggleDropdown('mobileServices', e)}
               >
                 <span>Services</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
               {activeDropdown === 'mobileServices' && (
                 <div className="pl-4 mt-2 border-l-2 border-teal-700">
-                  <Link href="/services/fragrance-manufacturing" className="block py-2" onClick={toggleMenu}>
+                  <Link href="/services/fragrance-manufacturing" className="block py-3 text-base" onClick={toggleMenu}>
                     Fragrance Manufacturing
                   </Link>
-                  <Link href="/services/glass-packaging" className="block py-2" onClick={toggleMenu}>
+                  <Link href="/services/glass-packaging" className="block py-3 text-base" onClick={toggleMenu}>
                     Glass & Packaging
                   </Link>
-                  <Link href="/services/full-service-solutions" className="block py-2" onClick={toggleMenu}>
+                  <Link href="/services/full-service-solutions" className="block py-3 text-base" onClick={toggleMenu}>
                     Full-Service Solutions
                   </Link>
                 </div>
               )}
             </div>
             
-            <Link href="/products" className="nav-link block py-2" onClick={toggleMenu}>
+            <Link href="/products" className="nav-link block py-3 text-lg" onClick={toggleMenu}>
               Products
             </Link>
-            <Link href="/glass" className="nav-link block py-2" onClick={toggleMenu}>
+            <Link href="/glass" className="nav-link block py-3 text-lg" onClick={toggleMenu}>
               Glass
             </Link>
             
             {/* Mobile Tools Dropdown */}
             <div>
               <button 
-                className="flex items-center justify-between w-full py-2"
-                onClick={() => toggleDropdown('mobileTools')}
+                className="flex items-center justify-between w-full py-3 text-lg"
+                onClick={(e) => toggleDropdown('mobileTools', e)}
               >
                 <span>Tools</span>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
               {activeDropdown === 'mobileTools' && (
                 <div className="pl-4 mt-2 border-l-2 border-teal-700">
-                  <Link href="/tools/quote-sheet" className="block py-2" onClick={toggleMenu}>
+                  <Link href="/tools/quote-sheet" className="block py-3 text-base" onClick={toggleMenu}>
                     Quote Sheet
                   </Link>
-                  <Link href="/tools/fragrance-calculator" className="block py-2" onClick={toggleMenu}>
+                  <Link href="/tools/fragrance-calculator" className="block py-3 text-base" onClick={toggleMenu}>
                     Fragrance Calculator
                   </Link>
                 </div>
               )}
             </div>
             
-            <Link href="/blog" className="nav-link block py-2" onClick={toggleMenu}>
+            <Link href="/blog" className="nav-link block py-3 text-lg" onClick={toggleMenu}>
               Blog
             </Link>
-            <Link href="/contact" className="nav-link block py-2" onClick={toggleMenu}>
+            <Link href="/contact" className="nav-link block py-3 text-lg" onClick={toggleMenu}>
               Contact
             </Link>
-            <Link href="/tools/quote-sheet" className="btn btn-primary block text-center" onClick={toggleMenu}>
+            
+            <Link href="/tools/quote-sheet" className="btn btn-primary text-center py-3 mt-4" onClick={toggleMenu}>
               Get a Quote
             </Link>
           </div>

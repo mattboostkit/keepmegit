@@ -249,12 +249,27 @@ export default function BlogPostClient({ slug }) {
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
               {post.relatedPosts.map((relatedPost, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md p-6">
-                  <h3 className="text-lg font-bold mb-2">{relatedPost.title}</h3>
-                  <p className="text-sm text-gray-600 mt-2">{format(new Date(relatedPost.publishedAt), 'd MMMM yyyy')}</p>
-                  <Link href={`/blog/${relatedPost.slug.current}`} className="mt-4 inline-block text-teal-700">
-                    Read More →
-                  </Link>
+                <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden">
+                  {relatedPost.featuredImage && (
+                    <div className="relative h-48 w-full">
+                      <Image
+                        src={relatedPost.featuredImage}
+                        alt={relatedPost.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold mb-2 line-clamp-2">{relatedPost.title}</h3>
+                    <p className="text-sm text-gray-600 mb-3">{format(new Date(relatedPost.publishedAt), 'd MMMM yyyy')}</p>
+                    <Link 
+                      href={`/blog/${relatedPost.slug.current}`} 
+                      className="inline-block text-teal-700 font-medium hover:text-teal-900 transition-colors"
+                    >
+                      Read More →
+                    </Link>
+                  </div>
                 </div>
               ))}
             </div>

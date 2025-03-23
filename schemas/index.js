@@ -8,6 +8,7 @@ import glassPage from './glassPage'
 import service from './service'
 import product from './product'
 import testimonial from './testimonial'
+import aboutPage from './aboutPage'
 
 // Export schemas
 export const schemaTypes = [
@@ -19,5 +20,6 @@ export const schemaTypes = [
   glassPage,
   service,
   product,
-  testimonial
+  testimonial,
+  aboutPage
 ]
