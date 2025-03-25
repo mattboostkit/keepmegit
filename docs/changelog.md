@@ -3,8 +3,10 @@
 ## 23 March 2025
 
 ### Fixed
-- Resolved dependency conflict between Next.js v15.2.3 and next-sanity by using `--legacy-peer-deps` flag
-- Successfully installed next-sanity v8.0.0 alongside Next.js v15.2.3 despite peer dependency requirements
+- Resolved dependency conflict between Next.js and next-sanity
+  - Initially attempted using `--legacy-peer-deps` flag for local development
+  - Downgraded Next.js from v15.2.3 to v14.1.0 to ensure compatibility with next-sanity v8.0.0 for Vercel deployment
+- Successfully installed next-sanity alongside compatible Next.js version
 
 ## 22 March 2025
 

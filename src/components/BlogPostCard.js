@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import SanityImage from './SanityImage';
 import Link from 'next/link';
 import { format } from 'date-fns';
 
@@ -28,20 +28,14 @@ export default function BlogPostCard({ post }) {
     <div className="blog-post-card bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-300 hover:shadow-lg hover:-translate-y-1">
       <Link href={postUrl} className="block">
         <div className="relative h-56 w-full">
-          {post.featuredImage ? (
-            <Image
-              src={post.featuredImage}
-              alt={post.title || 'Blog post image'}
-              fill
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="object-cover"
-              priority={false}
-            />
-          ) : (
-            <div className="h-full w-full bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-400">No image available</span>
-            </div>
-          )}
+          <SanityImage
+            src={post.featuredImage}
+            alt={post.title || 'Blog post image'}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
+            priority={false}
+          />
           
           {post.categories && post.categories[0] && (
             <span className="absolute top-4 right-4 bg-teal-600 text-white text-xs font-bold px-3 py-1 rounded-full">
@@ -70,19 +64,13 @@ export default function BlogPostCard({ post }) {
         
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            {post.author?.image ? (
-              <Image
-                src={post.author.image}
-                alt={post.author.name || 'Author'}
-                width={32}
-                height={32}
-                className="rounded-full mr-2"
-              />
-            ) : (
-              <div className="w-8 h-8 bg-gray-200 rounded-full mr-2 flex items-center justify-center">
-                <span className="text-xs text-gray-500">{post.author?.name?.charAt(0) || 'A'}</span>
-              </div>
-            )}
+            <SanityImage
+              src={post.author?.image}
+              alt={post.author?.name || 'Author'}
+              width={32}
+              height={32}
+              className="rounded-full mr-2"
+            />
             <span className="text-sm text-gray-700">{post.author?.name || 'Anonymous'}</span>
           </div>
           

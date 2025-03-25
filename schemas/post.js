@@ -29,10 +29,26 @@ export default {
     {
       name: 'featuredImage',
       title: 'Featured Image',
+      description: 'Recommended: 1200×675px (16:9 aspect ratio)',
       type: 'image',
       options: {
         hotspot: true,
       },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alternative Text',
+          type: 'string',
+          description: 'Important for accessibility and SEO',
+          validation: Rule => Rule.required().warning('Alternative text is required for accessibility')
+        },
+        {
+          name: 'caption',
+          title: 'Caption',
+          type: 'string',
+        }
+      ],
+      validation: Rule => Rule.required().warning('A featured image is required for blog posts')
     },
     {
       name: 'categories',

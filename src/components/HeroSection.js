@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import SanityImage from './SanityImage';
 
 export default function HeroSection({ 
   title, 
@@ -17,7 +17,7 @@ export default function HeroSection({
       {/* Background Image */}
       <div className="absolute inset-0 w-full h-full">
         {backgroundImage ? (
-          <Image
+          <SanityImage
             src={backgroundImage}
             alt="Hero background"
             fill

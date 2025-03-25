@@ -5,7 +5,8 @@ import SEO from '@/components/SEO';
 
 export const metadata = {
   title: 'Glass Decoration Options | KeepMe',
-  description: 'Explore our premium glass decoration techniques including screen printing, hot foil stamping, and more.',
+  description: 'Explore our premium glass decoration techniques including screen printing, hot foil stamping, and more for your luxury packaging needs.',
+  keywords: 'glass decoration, screen printing, hot foil stamping, acid etching, colour spraying, glass packaging decoration',
 };
 
 // Mock decoration techniques data (would typically come from Sanity CMS)
@@ -89,93 +90,142 @@ export default function GlassDecorationPage() {
     <>
       <SEO 
         title="Glass Decoration Options | KeepMe"
-        description="Explore our premium glass decoration techniques including screen printing, hot foil stamping, and more."
+        description="Explore our premium glass decoration techniques including screen printing, hot foil stamping, and more for your luxury packaging needs."
         type="service"
       />
       
-      <div className="container mx-auto px-4 py-12">
-        <h1 className="text-4xl font-bold mb-8 text-center">Glass Decoration Options</h1>
-        
-        <div className="mb-12">
-          <p className="text-lg text-center max-w-3xl mx-auto mb-8">
+      {/* Hero Section */}
+      <section className="bg-gray-50 py-12 md:py-20">
+        <div className="container mx-auto px-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 text-center text-gray-800">Glass Decoration Options</h1>
+          
+          <p className="text-lg text-center max-w-3xl mx-auto mb-8 text-gray-600">
             Enhance your glass packaging with our wide range of decoration techniques.
-            From screen printing to hot foil stamping, we offer solutions to make your products stand out.
+            From screen printing to hot foil stamping, we offer solutions to make your products stand out on the shelf.
           </p>
           
-          <div className="flex justify-center gap-4 mb-12">
-            <Link href="/glass/products" className="bg-primary text-white px-6 py-3 rounded-md hover:bg-primary-dark transition">
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-12">
+            <Link href="/glass/products" className="bg-teal-700 text-white px-6 py-3 rounded-md hover:bg-teal-800 transition duration-300 text-center">
               View Glass Products
             </Link>
-            <Link href="/contact" className="border border-primary text-primary px-6 py-3 rounded-md hover:bg-gray-50 transition">
+            <Link href="/tools/quote-sheet" className="border border-teal-700 text-teal-700 px-6 py-3 rounded-md hover:bg-teal-50 transition duration-300 text-center">
               Request a Quote
             </Link>
           </div>
         </div>
+      </section>
         
-        {/* Decoration Techniques */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16">
-          {decorationTechniques.map((technique) => (
-            <div key={technique.id} className="decoration-card border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition">
-              <div className="relative h-64 w-full">
-                <div className="absolute inset-0 bg-gray-200 flex items-center justify-center">
-                  <p className="text-gray-500">Image: {technique.title}</p>
+      {/* Decoration Techniques */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-2xl md:text-3xl font-bold mb-12 text-center text-gray-800">Our Decoration Techniques</h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            {decorationTechniques.map((technique) => (
+              <div key={technique.id} className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition duration-300 bg-white">
+                <div className="relative h-64 w-full bg-gray-200">
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <p className="text-gray-500">Image: {technique.title}</p>
+                  </div>
+                </div>
+                
+                <div className="p-6">
+                  <h3 className="text-xl md:text-2xl font-semibold mb-3 text-gray-800">{technique.title}</h3>
+                  <p className="text-gray-600 mb-4">{technique.description}</p>
+                  
+                  <h4 className="font-medium mb-2 text-gray-800">Key Benefits:</h4>
+                  <ul className="list-disc pl-5 mb-6">
+                    {technique.benefits.map((benefit, index) => (
+                      <li key={index} className="text-gray-600 mb-1">{benefit}</li>
+                    ))}
+                  </ul>
+                  
+                  <Link href={`/glass/gallery#${technique.id}`} className="text-teal-700 font-medium hover:text-teal-800 hover:underline transition duration-300 inline-flex items-center">
+                    View Examples
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-1" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </Link>
                 </div>
               </div>
-              
-              <div className="p-6">
-                <h3 className="text-2xl font-medium mb-3">{technique.title}</h3>
-                <p className="text-gray-600 mb-4">{technique.description}</p>
-                
-                <h4 className="font-medium mb-2">Key Benefits:</h4>
-                <ul className="list-disc pl-5 mb-4">
-                  {technique.benefits.map((benefit, index) => (
-                    <li key={index} className="text-gray-600 mb-1">{benefit}</li>
-                  ))}
-                </ul>
-                
-                <button className="text-primary font-medium hover:underline">
-                  View Examples
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+      </section>
         
-        {/* Combination Techniques */}
-        <div className="bg-gray-50 p-8 rounded-lg mb-16">
-          <h2 className="text-2xl font-semibold mb-4">Combination Techniques</h2>
-          <p className="mb-6">
-            For truly unique packaging, we can combine multiple decoration techniques.
-            Create distinctive designs by pairing screen printing with hot foil stamping,
-            or acid etching with colour spraying. Our experts can advise on the best
-            combinations for your specific requirements.
-          </p>
-          
-          <Link 
-            href="/contact" 
-            className="bg-primary text-white px-6 py-3 rounded-md inline-block hover:bg-primary-dark transition"
-          >
-            Discuss Your Decoration Requirements
-          </Link>
+      {/* Combination Techniques */}
+      <section className="py-16 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="bg-white p-8 md:p-10 rounded-lg shadow-sm max-w-4xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-gray-800">Combination Techniques</h2>
+            <p className="text-gray-600 mb-6">
+              For truly unique packaging, we can combine multiple decoration techniques.
+              Create distinctive designs by pairing screen printing with hot foil stamping,
+              or acid etching with colour spraying. Our experts can advise on the best
+              combinations for your specific requirements.
+            </p>
+            
+            <Link 
+              href="/contact" 
+              className="bg-teal-700 text-white px-6 py-3 rounded-md inline-block hover:bg-teal-800 transition duration-300"
+            >
+              Discuss Your Decoration Requirements
+            </Link>
+          </div>
         </div>
+      </section>
         
-        {/* Design Services */}
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-4">Design Services</h2>
-          <p className="max-w-3xl mx-auto mb-6">
+      {/* Design Services */}
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-gray-800">Design Services</h2>
+          <p className="max-w-3xl mx-auto mb-8 text-gray-600">
             Need help with your decoration design? Our in-house design team can assist with
-            creating artwork that maximizes the impact of your chosen decoration techniques.
+            creating artwork that maximises the impact of your chosen decoration techniques.
             From concept to production-ready files, we're here to help.
           </p>
           
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-10">
+            <div className="p-6 border rounded-lg hover:shadow-md transition duration-300">
+              <h3 className="text-xl font-medium mb-3 text-gray-800">Concept Development</h3>
+              <p className="text-gray-600">We'll work with you to develop decoration concepts that align with your brand identity.</p>
+            </div>
+            <div className="p-6 border rounded-lg hover:shadow-md transition duration-300">
+              <h3 className="text-xl font-medium mb-3 text-gray-800">Technical Artwork</h3>
+              <p className="text-gray-600">Our team will prepare production-ready artwork optimised for your chosen decoration technique.</p>
+            </div>
+            <div className="p-6 border rounded-lg hover:shadow-md transition duration-300">
+              <h3 className="text-xl font-medium mb-3 text-gray-800">Sampling</h3>
+              <p className="text-gray-600">We provide decoration samples so you can see and feel the quality before full production.</p>
+            </div>
+          </div>
+          
           <Link 
             href="/glass/gallery" 
-            className="bg-secondary text-white px-6 py-3 rounded-md inline-block hover:bg-secondary-dark transition"
+            className="bg-gray-800 text-white px-6 py-3 rounded-md inline-block hover:bg-gray-700 transition duration-300"
           >
             View Our Decoration Gallery
           </Link>
         </div>
-      </div>
+      </section>
+      
+      {/* Call to Action */}
+      <section className="py-16 bg-teal-700 text-white">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Enhance Your Glass Packaging?</h2>
+          <p className="text-lg max-w-3xl mx-auto mb-8">
+            Contact our team today to discuss how our decoration techniques can elevate your products.
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link href="/contact" className="bg-white text-teal-700 px-6 py-3 rounded-md hover:bg-gray-100 transition duration-300">
+              Contact Us
+            </Link>
+            <Link href="/tools/quote-sheet" className="border border-white text-white px-6 py-3 rounded-md hover:bg-teal-600 transition duration-300">
+              Request a Quote
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

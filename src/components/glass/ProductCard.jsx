@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import Image from 'next/image';
+import SanityImage from '../SanityImage';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 
@@ -14,22 +14,20 @@ const ProductCard = ({ product, onAddToEnquiry, isInEnquiry }) => {
       transition={{ duration: 0.3 }}
       whileHover={{ y: -5 }}
     >
-      {product.image && (
-        <div className="relative h-64 w-full">
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-          {product.featured && (
-            <div className="absolute top-0 right-0 bg-yellow-500 text-white px-3 py-1 text-sm font-medium">
-              Featured
-            </div>
-          )}
-        </div>
-      )}
+      <div className="relative h-64 w-full">
+        <SanityImage
+          src={product.image}
+          alt={product.title}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        {product.featured && (
+          <div className="absolute top-0 right-0 bg-yellow-500 text-white px-3 py-1 text-sm font-medium">
+            Featured
+          </div>
+        )}
+      </div>
       
       <div className="p-6">
         <div className="flex justify-between items-start mb-2">

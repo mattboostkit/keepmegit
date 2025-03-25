@@ -31,12 +31,28 @@ export default {
       title: 'Main Image',
       type: 'image',
       options: {
-        hotspot: true,
+        hotspot: true, // Enables UI for selecting focal point
       },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alternative Text',
+          type: 'string',
+          description: 'Important for accessibility and SEO',
+          validation: Rule => Rule.required().warning('Alternative text is required for accessibility')
+        },
+        {
+          name: 'caption',
+          title: 'Caption',
+          type: 'string',
+        }
+      ],
+      validation: Rule => Rule.required().warning('A main product image is required')
     },
     {
       name: 'gallery',
       title: 'Gallery Images',
+      description: 'Additional product images (recommended: 800×800px, square aspect ratio)',
       type: 'array',
       of: [
         {
@@ -49,12 +65,14 @@ export default {
               name: 'alt',
               type: 'string',
               title: 'Alternative Text',
+              description: 'Important for accessibility and SEO',
+              validation: Rule => Rule.required().warning('Alternative text is required for accessibility')
             },
             {
               name: 'caption',
               type: 'string',
               title: 'Caption',
-            },
+            }
           ]
         }
       ]

@@ -20,15 +20,6 @@ export const clientConfig = {
   dataset,
   apiVersion,
   useCdn: true,
-  // Add CORS configuration for Vercel deployment
-  cors: {
-    allowOrigins: [
-      'http://localhost:3000',
-      'https://keepme-git.vercel.app',
-      'https://*.vercel.app',
-      process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : '',
-    ].filter(Boolean),
-  },
 };
 
 // Create a server-side client
